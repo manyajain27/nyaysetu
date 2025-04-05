@@ -46,7 +46,7 @@ const HomePage = () => {
   return (
     <div className="min-h-screen bg-amber-50">
       {/* Hero Section - More elegant and professional */}
-      <section className="relative bg-gradient-to-r from-amber-150 via-amber-700 to-amber-150 text-white py-24 overflow-hidden">
+      <section className="relative bg-gradient-to-r from-amber-950 via-amber-600 to-amber-950 text-white py-24 overflow-hidden">
         {/* Background pattern */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-full opacity-5">

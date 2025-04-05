@@ -2,7 +2,21 @@
 
 import { useState, useEffect } from "react"
 import { useParams, Link } from "react-router-dom"
-import { User, Clock, ThumbsUp, ThumbsDown, Flag, ArrowLeft, MessageCircle } from "lucide-react"
+import {
+  User,
+  Clock,
+  ThumbsUp,
+  ThumbsDown,
+  Flag,
+  ArrowLeft,
+  MessageCircle,
+  CheckCircle,
+  Award,
+  Share2,
+  Bookmark,
+  Tag,
+  AlertTriangle,
+} from "lucide-react"
 import LoadingScreen from "../components/LoadingScreen"
 
 const QADetailPage = () => {
@@ -11,6 +25,7 @@ const QADetailPage = () => {
   const [question, setQuestion] = useState(null)
   const [answers, setAnswers] = useState([])
   const [newAnswer, setNewAnswer] = useState("")
+  const [sortBy, setSortBy] = useState("newest") // newest, votes
 
   useEffect(() => {
     // Simulate data loading
@@ -49,19 +64,38 @@ const QADetailPage = () => {
     setNewAnswer("")
   }
 
+  const sortAnswers = () => {
+    if (sortBy === "newest") {
+      // Sort by date (newest first) - in a real app, you'd use actual date objects
+      return [...answers].sort((a, b) => {
+        if (a.date === "Just now") return -1
+        if (b.date === "Just now") return 1
+        return 0 // This is simplified, real implementation would compare dates
+      })
+    } else {
+      // Sort by votes (highest first)
+      return [...answers].sort((a, b) => b.upvotes - b.downvotes - (a.upvotes - a.downvotes))
+    }
+  }
+
+  const sortedAnswers = sortAnswers()
+
   if (loading) {
     return <LoadingScreen />
   }
 
   if (!question) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Question Not Found</h1>
-          <p className="text-gray-600 mb-6">The question you're looking for doesn't exist or has been removed.</p>
+      <div className="min-h-screen bg-amber-50 flex items-center justify-center">
+        <div className="text-center bg-white p-8 rounded-lg shadow-md border border-amber-200 max-w-md">
+          <div className="mx-auto w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4">
+            <MessageCircle className="h-8 w-8 text-amber-700" />
+          </div>
+          <h1 className="text-2xl font-bold text-amber-900 mb-4">Question Not Found</h1>
+          <p className="text-amber-700 mb-6">The question you're looking for doesn't exist or has been removed.</p>
           <Link
             to="/qa"
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-amber-800 hover:bg-amber-700"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Q&A
@@ -72,13 +106,13 @@ const QADetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-amber-50 py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav className="mb-6">
-          <ol className="flex items-center space-x-2 text-sm text-gray-500">
+          <ol className="flex items-center space-x-2 text-sm text-amber-600">
             <li>
-              <Link to="/" className="hover:text-indigo-600">
+              <Link to="/" className="hover:text-amber-800">
                 Home
               </Link>
             </li>
@@ -86,54 +120,60 @@ const QADetailPage = () => {
               <span className="mx-2">/</span>
             </li>
             <li>
-              <Link to="/qa" className="hover:text-indigo-600">
+              <Link to="/qa" className="hover:text-amber-800">
                 Q&A
               </Link>
             </li>
             <li>
               <span className="mx-2">/</span>
             </li>
-            <li className="text-gray-700 font-medium truncate">{question.title}</li>
+            <li className="text-amber-800 font-medium truncate">{question.title}</li>
           </ol>
         </nav>
 
         {/* Question */}
-        <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8 border border-amber-200">
           <div className="p-6">
-            <div className="flex items-center mb-4">
-              <div className="flex items-center text-sm text-gray-500">
-                <Clock className="h-4 w-4 mr-1" />
+            <div className="flex flex-wrap items-center mb-4 text-sm text-amber-600">
+              <div className="flex items-center mr-4 mb-2">
+                <Clock className="h-4 w-4 mr-1 text-amber-500" />
                 <span>{question.date}</span>
               </div>
-              <div className="mx-2 text-gray-300">|</div>
-              <div className="flex items-center text-sm text-gray-500">
-                <User className="h-4 w-4 mr-1" />
+              <div className="flex items-center mr-4 mb-2">
+                <User className="h-4 w-4 mr-1 text-amber-500" />
                 <span>{question.askedBy}</span>
               </div>
-              <div className="mx-2 text-gray-300">|</div>
-              <div className="text-sm text-gray-500">
-                <span className="px-2 py-1 text-xs rounded-full bg-indigo-100 text-indigo-800">
+              <div className="flex items-center mb-2">
+                <Tag className="h-4 w-4 mr-1 text-amber-500" />
+                <span className="px-2 py-1 text-xs rounded-full bg-amber-100 text-amber-800 border border-amber-200">
                   {question.category}
                 </span>
               </div>
             </div>
 
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">{question.title}</h1>
-            <p className="text-gray-600 mb-6">{question.description}</p>
+            <h1 className="text-2xl font-bold text-amber-900 mb-4">{question.title}</h1>
+            <p className="text-amber-700 mb-6">{question.description}</p>
 
-            <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-              <div className="flex space-x-4">
-                <button className="flex items-center text-gray-500 hover:text-indigo-600">
+            <div className="flex flex-wrap justify-between items-center pt-4 border-t border-amber-100">
+              <div className="flex space-x-4 mb-2 sm:mb-0">
+                <button className="flex items-center text-amber-600 hover:text-amber-800 transition-colors">
                   <ThumbsUp className="h-5 w-5 mr-1" />
                   <span>{question.upvotes}</span>
                 </button>
-                <button className="flex items-center text-gray-500 hover:text-red-600">
+                <button className="flex items-center text-amber-600 hover:text-red-600 transition-colors">
                   <Flag className="h-5 w-5 mr-1" />
                   <span>Report</span>
                 </button>
               </div>
-              <div className="text-sm text-gray-500">
-                {answers.length} {answers.length === 1 ? "answer" : "answers"}
+              <div className="flex space-x-4">
+                <button className="flex items-center text-amber-600 hover:text-amber-800 transition-colors">
+                  <Bookmark className="h-5 w-5 mr-1" />
+                  <span className="sr-only md:not-sr-only text-sm">Save</span>
+                </button>
+                <button className="flex items-center text-amber-600 hover:text-amber-800 transition-colors">
+                  <Share2 className="h-5 w-5 mr-1" />
+                  <span className="sr-only md:not-sr-only text-sm">Share</span>
+                </button>
               </div>
             </div>
           </div>
@@ -141,51 +181,100 @@ const QADetailPage = () => {
 
         {/* Answers */}
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">Answers</h2>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-bold text-amber-900">
+              {answers.length} {answers.length === 1 ? "Answer" : "Answers"}
+            </h2>
+            <div className="flex items-center">
+              <span className="text-sm text-amber-700 mr-2">Sort by:</span>
+              <div className="flex border border-amber-200 rounded-md overflow-hidden">
+                <button
+                  onClick={() => setSortBy("newest")}
+                  className={`px-3 py-1 text-sm ${
+                    sortBy === "newest"
+                      ? "bg-amber-100 text-amber-800 font-medium"
+                      : "bg-white text-amber-600 hover:bg-amber-50"
+                  }`}
+                >
+                  Newest
+                </button>
+                <button
+                  onClick={() => setSortBy("votes")}
+                  className={`px-3 py-1 text-sm ${
+                    sortBy === "votes"
+                      ? "bg-amber-100 text-amber-800 font-medium"
+                      : "bg-white text-amber-600 hover:bg-amber-50"
+                  }`}
+                >
+                  Votes
+                </button>
+              </div>
+            </div>
+          </div>
 
           {answers.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-lg shadow">
-              <p className="text-xl text-gray-600">No answers yet.</p>
-              <p className="text-gray-500 mt-2">Be the first to answer this question!</p>
+            <div className="text-center py-12 bg-white rounded-lg shadow-md border border-amber-200">
+              <div className="mx-auto w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4">
+                <MessageCircle className="h-8 w-8 text-amber-700" />
+              </div>
+              <p className="text-xl text-amber-800 font-medium mb-2">No answers yet.</p>
+              <p className="text-amber-600 mb-6">Be the first to answer this question!</p>
+              <a
+                href="#answer-form"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-amber-800 hover:bg-amber-700"
+              >
+                Write an Answer
+              </a>
             </div>
           ) : (
             <div className="space-y-6">
-              {answers.map((answer) => (
-                <div key={answer.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+              {sortedAnswers.map((answer) => (
+                <div key={answer.id} className="bg-white rounded-lg shadow-md overflow-hidden border border-amber-200">
                   <div className="p-6">
                     <div className="flex items-center mb-4">
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Clock className="h-4 w-4 mr-1" />
+                      <div className="flex items-center text-sm text-amber-600">
+                        <Clock className="h-4 w-4 mr-1 text-amber-500" />
                         <span>{answer.date}</span>
                       </div>
-                      <div className="mx-2 text-gray-300">|</div>
-                      <div className="flex items-center text-sm text-gray-500">
-                        <User className="h-4 w-4 mr-1" />
+                      <div className="mx-2 text-amber-300">|</div>
+                      <div className="flex items-center text-sm text-amber-600">
+                        <User className="h-4 w-4 mr-1 text-amber-500" />
                         <span>{answer.answeredBy}</span>
                         {answer.isVerified && (
-                          <span className="ml-1 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-                            ✓ Verified Lawyer
+                          <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+                            <CheckCircle className="h-3 w-3 mr-1" />
+                            Verified Lawyer
                           </span>
                         )}
                       </div>
                     </div>
 
-                    <div className="prose max-w-none mb-4">
+                    <div className="prose max-w-none mb-4 text-amber-700">
                       <p>{answer.content}</p>
                     </div>
 
-                    <div className="flex justify-between items-center pt-4 border-t border-gray-100">
+                    {answer.isVerified && (
+                      <div className="mb-4 flex items-start p-3 bg-amber-50 rounded-md border border-amber-200">
+                        <Award className="h-5 w-5 text-amber-600 mr-2 mt-0.5 flex-shrink-0" />
+                        <p className="text-sm text-amber-700">
+                          This answer is provided by a verified legal professional. However, it is for informational
+                          purposes only and should not be considered as legal advice for your specific situation.
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="flex justify-between items-center pt-4 border-t border-amber-100">
                       <div className="flex space-x-4">
-                        <button className="flex items-center text-gray-500 hover:text-indigo-600">
+                        <button className="flex items-center text-amber-600 hover:text-amber-800 transition-colors">
                           <ThumbsUp className="h-5 w-5 mr-1" />
                           <span>{answer.upvotes}</span>
                         </button>
-                        <button className="flex items-center text-gray-500 hover:text-red-600">
+                        <button className="flex items-center text-amber-600 hover:text-amber-800 transition-colors">
                           <ThumbsDown className="h-5 w-5 mr-1" />
                           <span>{answer.downvotes}</span>
                         </button>
                       </div>
-                      <button className="flex items-center text-gray-500 hover:text-red-600">
+                      <button className="flex items-center text-amber-600 hover:text-red-600 transition-colors">
                         <Flag className="h-5 w-5 mr-1" />
                         <span>Report</span>
                       </button>
@@ -198,29 +287,17 @@ const QADetailPage = () => {
         </div>
 
         {/* Answer Form */}
-        <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+        <div id="answer-form" className="bg-white rounded-lg shadow-md overflow-hidden mb-8 border border-amber-200">
           <div className="p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Your Answer</h2>
+            <h2 className="text-xl font-bold text-amber-900 mb-4">Your Answer</h2>
 
-            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+            <div className="bg-amber-50 border-l-4 border-amber-400 p-4 mb-6">
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <svg
-                    className="h-5 w-5 text-yellow-400"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                  <AlertTriangle className="h-5 w-5 text-amber-500" />
                 </div>
                 <div className="ml-3">
-                  <p className="text-sm text-yellow-700">
+                  <p className="text-sm text-amber-700">
                     <strong className="font-medium">Disclaimer:</strong> Answers provided here are for informational
                     purposes only and do not constitute legal advice. Please consult with a qualified legal professional
                     for advice specific to your situation.
@@ -233,7 +310,7 @@ const QADetailPage = () => {
               <div className="mb-4">
                 <textarea
                   rows={6}
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="block w-full rounded-md border-amber-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 bg-amber-50"
                   placeholder="Write your answer here..."
                   value={newAnswer}
                   onChange={(e) => setNewAnswer(e.target.value)}
@@ -243,7 +320,7 @@ const QADetailPage = () => {
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-amber-800 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors"
                 >
                   <MessageCircle className="mr-2 h-5 w-5" />
                   Post Answer
@@ -251,6 +328,29 @@ const QADetailPage = () => {
               </div>
             </form>
           </div>
+        </div>
+
+        {/* Related Questions */}
+        <div className="bg-white rounded-lg shadow-md p-6 border border-amber-200">
+          <h2 className="text-xl font-bold text-amber-900 mb-4">Related Questions</h2>
+          <ul className="space-y-3">
+            {mockQuestions
+              .filter((q) => q.id !== question.id && q.category === question.category)
+              .slice(0, 3)
+              .map((q) => (
+                <li key={q.id} className="border-b border-amber-100 pb-3 last:border-0 last:pb-0">
+                  <Link to={`/qa/${q.id}`} className="hover:text-amber-700 text-amber-900 font-medium">
+                    {q.title}
+                  </Link>
+                  <div className="flex items-center mt-1 text-sm text-amber-600">
+                    <MessageCircle className="h-3 w-3 mr-1" />
+                    <span>{q.answers} answers</span>
+                    <span className="mx-2">•</span>
+                    <span>{q.upvotes} upvotes</span>
+                  </div>
+                </li>
+              ))}
+          </ul>
         </div>
       </div>
     </div>
@@ -304,7 +404,7 @@ const mockAnswers = [
     answeredBy: "Adv. Suresh Iyer",
     date: "April 3, 2025",
     isVerified: true,
-    upvotes: 8,
+    upvotes: 15,
     downvotes: 1,
   },
   {
@@ -315,7 +415,7 @@ const mockAnswers = [
     answeredBy: "Adv. Meera Reddy",
     date: "April 4, 2025",
     isVerified: true,
-    upvotes: 5,
+    upvotes: 80,
     downvotes: 0,
   },
   {

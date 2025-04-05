@@ -1,10 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronDown, ChevronUp } from "lucide-react"
+import { ChevronDown, ChevronUp, Search, ArrowRight, HelpCircle, AlertTriangle } from "lucide-react"
+import { Link } from "react-router-dom"
 
 const FAQPage = () => {
   const [openFaqs, setOpenFaqs] = useState({})
+  const [searchTerm, setSearchTerm] = useState("")
+  const [activeCategory, setActiveCategory] = useState("all")
 
   const toggleFaq = (id) => {
     setOpenFaqs((prev) => ({
@@ -112,10 +115,27 @@ const FAQPage = () => {
     },
   ]
 
+  // Filter FAQs based on search term
+  const filteredFaqs = faqCategories
+    .map((category) => {
+      return {
+        ...category,
+        faqs: category.faqs.filter(
+          (faq) =>
+            faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            faq.answer.toLowerCase().includes(searchTerm.toLowerCase()),
+        ),
+      }
+    })
+    .filter((category) => activeCategory === "all" || category.id === activeCategory)
+
+  // Count total FAQs that match the search
+  const totalFilteredFaqs = filteredFaqs.reduce((total, category) => total + category.faqs.length, 0)
+
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-amber-50 pb-12">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-indigo-800 to-indigo-600 text-white py-16">
+      <section className="bg-gradient-to-r from-amber-800 to-amber-700 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl font-bold mb-4">Frequently Asked Questions</h1>
           <p className="text-xl max-w-3xl mx-auto">Find answers to common questions about NyaySetu</p>
@@ -126,72 +146,123 @@ const FAQPage = () => {
         {/* Search Bar */}
         <div className="mb-12">
           <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-amber-500" />
+            </div>
             <input
               type="text"
-              className="block w-full pl-4 pr-10 py-3 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="block w-full pl-10 pr-3 py-3 border border-amber-300 rounded-lg leading-5 bg-white placeholder-amber-400 focus:outline-none focus:placeholder-amber-400 focus:ring-1 focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
               placeholder="Search for questions..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <svg
-                className="h-5 w-5 text-gray-400"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
           </div>
         </div>
 
-        {/* FAQ Categories */}
-        <div className="space-y-12">
-          {faqCategories.map((category) => (
-            <div key={category.id}>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">{category.title}</h2>
-              <div className="space-y-4">
-                {category.faqs.map((faq) => (
-                  <div key={faq.id} className="bg-white shadow-md rounded-lg overflow-hidden">
-                    <button
-                      onClick={() => toggleFaq(faq.id)}
-                      className="w-full flex justify-between items-center p-4 focus:outline-none"
-                    >
-                      <span className="text-lg font-medium text-gray-900">{faq.question}</span>
-                      {openFaqs[faq.id] ? (
-                        <ChevronUp className="h-5 w-5 text-indigo-600" />
-                      ) : (
-                        <ChevronDown className="h-5 w-5 text-indigo-600" />
-                      )}
-                    </button>
-                    {openFaqs[faq.id] && (
-                      <div className="p-4 bg-gray-50 border-t border-gray-200">
-                        <p className="text-gray-600">{faq.answer}</p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+        {/* Category Tabs */}
+        <div className="mb-8 overflow-x-auto">
+          <div className="flex space-x-2 min-w-max">
+            <button
+              onClick={() => setActiveCategory("all")}
+              className={`px-4 py-2 rounded-full text-sm font-medium ${
+                activeCategory === "all"
+                  ? "bg-amber-800 text-white"
+                  : "bg-white text-amber-800 border border-amber-200 hover:bg-amber-50"
+              } transition-colors`}
+            >
+              All Categories
+            </button>
+            {faqCategories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setActiveCategory(category.id)}
+                className={`px-4 py-2 rounded-full text-sm font-medium ${
+                  activeCategory === category.id
+                    ? "bg-amber-800 text-white"
+                    : "bg-white text-amber-800 border border-amber-200 hover:bg-amber-50"
+                } transition-colors`}
+              >
+                {category.title}
+              </button>
+            ))}
+          </div>
         </div>
 
+        {/* Search Results Count */}
+        {searchTerm && (
+          <div className="mb-6 text-amber-700">
+            Found {totalFilteredFaqs} results for "{searchTerm}"
+          </div>
+        )}
+
+        {/* FAQ Categories */}
+        {totalFilteredFaqs === 0 ? (
+          <div className="text-center py-16 bg-white rounded-lg shadow-md border border-amber-200">
+            <div className="mx-auto w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4">
+              <HelpCircle className="h-8 w-8 text-amber-700" />
+            </div>
+            <p className="text-xl text-amber-800 font-medium mb-2">No questions found matching your search.</p>
+            <p className="text-amber-600 mb-8">Try using different keywords or browse through our categories.</p>
+            <button
+              onClick={() => setSearchTerm("")}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-amber-800 hover:bg-amber-700"
+            >
+              Clear Search
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-12">
+            {filteredFaqs.map(
+              (category) =>
+                category.faqs.length > 0 && (
+                  <div key={category.id}>
+                    <h2 className="text-2xl font-bold text-amber-900 mb-6">{category.title}</h2>
+                    <div className="space-y-4">
+                      {category.faqs.map((faq) => (
+                        <div
+                          key={faq.id}
+                          className="bg-white shadow-md rounded-lg overflow-hidden border border-amber-200"
+                        >
+                          <button
+                            onClick={() => toggleFaq(faq.id)}
+                            className="w-full flex justify-between items-center p-5 focus:outline-none hover:bg-amber-50 transition-colors"
+                          >
+                            <span className="text-lg font-medium text-amber-900">{faq.question}</span>
+                            {openFaqs[faq.id] ? (
+                              <ChevronUp className="h-5 w-5 text-amber-600" />
+                            ) : (
+                              <ChevronDown className="h-5 w-5 text-amber-600" />
+                            )}
+                          </button>
+                          {openFaqs[faq.id] && (
+                            <div className="p-5 bg-amber-50 border-t border-amber-200">
+                              <p className="text-amber-700">{faq.answer}</p>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ),
+            )}
+          </div>
+        )}
+
         {/* Still Have Questions */}
-        <div className="mt-16 bg-indigo-50 rounded-lg p-8 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Still Have Questions?</h2>
-          <p className="text-gray-600 mb-6">
+        <div className="mt-16 bg-white rounded-lg p-8 text-center border border-amber-200 shadow-md">
+          <div className="mx-auto w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4">
+            <AlertTriangle className="h-8 w-8 text-amber-700" />
+          </div>
+          <h2 className="text-2xl font-bold text-amber-900 mb-4">Still Have Questions?</h2>
+          <p className="text-amber-700 mb-6">
             If you couldn't find the answer to your question, feel free to contact our support team.
           </p>
-          <a
-            href="/contact"
-            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+          <Link
+            to="/contact"
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-amber-800 hover:bg-amber-700 transition-colors"
           >
-            Contact Us
-          </a>
+            Contact Us <ArrowRight className="ml-2 h-5 w-5" />
+          </Link>
         </div>
       </div>
     </div>
