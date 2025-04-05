@@ -50,7 +50,7 @@ const RegisterPage = () => {
       // Store the user type in localStorage before starting the sign up process
       localStorage.setItem("pendingUserType", formData.userType)
 
-      // Start the sign up process using Clerk - without the unsafeMetadata
+      // Start the sign up process using Clerk - with only the required parameters
       const result = await signUp.create({
         firstName: formData.fullName.split(" ")[0],
         lastName: formData.fullName.split(" ").slice(1).join(" ") || " ", // Ensure lastName is not empty
@@ -128,6 +128,11 @@ const RegisterPage = () => {
     if (!isLoaded) return
 
     try {
+      // Store the user type in localStorage before starting the OAuth flow
+      localStorage.setItem("pendingUserType", formData.userType)
+      console.log("Storing user type for Google auth:", formData.userType)
+
+      // Initiate OAuth with Google - keep it simple with only required parameters
       await signUp.authenticateWithRedirect({
         strategy: "oauth_google",
         redirectUrl: "/sso-callback",

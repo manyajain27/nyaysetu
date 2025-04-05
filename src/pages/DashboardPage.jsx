@@ -1,10 +1,15 @@
 "use client"
-
 import { useState } from "react"
 import { Link } from "react-router-dom"
-
+import {useAuth, useUser} from "@clerk/clerk-react"
 const DashboardPage = () => {
-  const [activeTab, setActiveTab] = useState("overview")
+    const [activeTab, setActiveTab] = useState("overview")
+    const { userId, sessionId } = useAuth()
+      const { user } = useUser()
+    
+      console.log("🌟 Authenticated user ID:", userId)
+      console.log("🌟 Authenticated session ID:", sessionId)
+      console.log("🌟 Full user object:", user)
 
   // Mock data for demonstration
   const mockStats = {

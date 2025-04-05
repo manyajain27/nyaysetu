@@ -3,17 +3,21 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Mail, Lock, Scale } from "lucide-react"
-import { useSignIn } from "@clerk/clerk-react"
+import { useSignIn, useClerk, useAuth, useSession } from "@clerk/clerk-react"
 
 const LoginPage = () => {
   const navigate = useNavigate()
   const { isLoaded, signIn, setActive } = useSignIn()
+  const { session } = useSession()
+  const { userId } = useAuth()
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     rememberMe: false,
+    userType: "user", // Default user type for login
   })
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState("")
 
@@ -27,52 +31,57 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
-    if (!isLoaded) {
-      return
-    }
-
+    if (!isLoaded) return
+  
     try {
       setIsSubmitting(true)
       setError("")
-
-      // Start the sign in process using Clerk
+  
       const result = await signIn.create({
         identifier: formData.email,
         password: formData.password,
       })
-
+  
       if (result.status === "complete") {
-        // Set the active session
         await setActive({ session: result.createdSessionId })
+  
+        // Clerk is now aware of the session, so wait a bit and then access values
+        setTimeout(() => {
+          const sessionId = result.createdSessionId
+          const storedUserId = signIn.userData?.id // Fallback if available
+          const localUserId = localStorage.getItem("__clerk_user_id")
+  
+          console.log("✅ Session ID:", sessionId)
+          console.log("✅ Stored Clerk User ID (if present):", storedUserId || localUserId)
+        }, 1000)
+  
+        localStorage.setItem("clerkSessionId", result.createdSessionId)
+  
         navigate("/dashboard")
       } else {
-        // Handle incomplete flow (e.g., 2FA)
-        console.log("Additional authentication steps required:", result)
+        console.warn("⚠️ Incomplete auth flow:", result)
       }
     } catch (err) {
-      console.error("Error signing in:", err)
-      // Improved error handling
-      if (err.errors && err.errors.length > 0) {
-        const errorMessage = err.errors[0].message || "An error occurred during sign in"
-        const errorCode = err.errors[0].code || ""
-        setError(`${errorMessage} (${errorCode})`)
+      console.error("❌ Sign-in Error:", err)
+      if (err.errors?.length > 0) {
+        const message = err.errors[0].message || "Unknown error"
+        const code = err.errors[0].code || ""
+        setError(`${message} (${code})`)
       } else {
-        setError("An unexpected error occurred. Please try again.")
+        setError("Something went wrong. Try again.")
       }
     } finally {
       setIsSubmitting(false)
     }
   }
+  
 
   const handleGoogleSignIn = async () => {
     if (!isLoaded) return
 
     try {
-      // Store the user type if they're signing up as a lawyer
-      if (formData.userType === "lawyer") {
-        localStorage.setItem("pendingUserType", "lawyer")
-      }
+      localStorage.setItem("pendingUserType", "user")
+      console.log("🌐 Redirecting to Google sign-in...")
 
       await signIn.authenticateWithRedirect({
         strategy: "oauth_google",
@@ -80,8 +89,8 @@ const LoginPage = () => {
         redirectUrlComplete: "/dashboard",
       })
     } catch (err) {
-      console.error("Error with Google sign in:", err)
-      setError(err.errors?.[0]?.message || "An error occurred with Google sign in")
+      console.error("❌ Google Sign-in Error:", err)
+      setError(err.errors?.[0]?.message || "Google sign-in failed.")
     }
   }
 
@@ -130,6 +139,7 @@ const LoginPage = () => {
             )}
 
             <form className="space-y-6" onSubmit={handleSubmit}>
+              {/* Email */}
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-amber-900">
                   Email address
@@ -152,6 +162,7 @@ const LoginPage = () => {
                 </div>
               </div>
 
+              {/* Password */}
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-amber-900">
                   Password
@@ -174,6 +185,7 @@ const LoginPage = () => {
                 </div>
               </div>
 
+              {/* Remember Me + Forgot */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <input
@@ -196,6 +208,7 @@ const LoginPage = () => {
                 </div>
               </div>
 
+              {/* Submit */}
               <div>
                 <button
                   type="submit"
@@ -207,6 +220,7 @@ const LoginPage = () => {
               </div>
             </form>
 
+            {/* Divider + Google */}
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
@@ -237,6 +251,7 @@ const LoginPage = () => {
         </div>
       </div>
 
+      {/* Footer */}
       <div className="mt-8 text-center">
         <p className="text-sm text-amber-700">
           By signing in, you agree to our{" "}
@@ -254,4 +269,3 @@ const LoginPage = () => {
 }
 
 export default LoginPage
-

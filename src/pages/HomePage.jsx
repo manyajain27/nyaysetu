@@ -20,19 +20,21 @@ import {
 } from "lucide-react"
 import LoadingScreen from "../components/LoadingScreen"
 import ContributorCard from "../components/ContributorCard"
+import {useClerk} from "@clerk/clerk-react"
 
 const HomePage = () => {
   const [loading, setLoading] = useState(true)
   const [featuredPosts, setFeaturedPosts] = useState([])
   const [categories, setCategories] = useState([])
   const [topContributors, setTopContributors] = useState([])
-
+  const {user} = useClerk();
   useEffect(() => {
     // Simulate data loading
     const timer = setTimeout(() => {
       setFeaturedPosts(mockFeaturedPosts)
       setCategories(mockCategories)
       setTopContributors(mockContributors)
+      
       setLoading(false)
     }, 1000)
 

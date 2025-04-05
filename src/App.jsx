@@ -3,6 +3,7 @@ import { SignedIn, SignedOut, RedirectToSignIn, ClerkProvider } from "@clerk/cle
 import Navbar from "./components/Navbar"
 import Footer from "./components/Footer"
 import ScrollToTop from "./components/ScrollToTop"
+import ChatWindow from "./components/ChatWindow"
 import HomePage from "./pages/HomePage"
 import BlogPage from "./pages/BlogPage"
 import BlogPostPage from "./pages/BlogPostPage"
@@ -107,6 +108,7 @@ function App() {
         </main>
         <Footer />
         <ScrollToTop />
+        <ChatWindow  />
       </Router>
   )
 }

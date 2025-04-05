@@ -11,12 +11,19 @@ const SSOCallbackPage = () => {
     // Check if we need to redirect to verification after OAuth login
     const checkRedirect = async () => {
       const userType = localStorage.getItem("pendingUserType")
+      console.log("Retrieved user type after OAuth:", userType)
 
       if (userType === "lawyer") {
         // Wait a bit for Clerk to complete authentication
         setTimeout(() => {
           navigate("/verification")
           localStorage.removeItem("pendingUserType")
+        }, 1000)
+      } else {
+        // For regular users, just remove the localStorage item after a delay
+        setTimeout(() => {
+          localStorage.removeItem("pendingUserType")
+          // No need to navigate as Clerk will handle the redirect to the dashboard
         }, 1000)
       }
     }
