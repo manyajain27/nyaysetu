@@ -3,16 +3,54 @@ import { Mail, Phone, MapPin } from "lucide-react"
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white">
+    <footer className="bg-amber-900 text-amber-100">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="mb-8 md:mb-0">
-            <h2 className="text-2xl font-bold mb-4">NyaySetu</h2>
-            <p className="text-gray-300 mb-4">
+            <div className="flex items-center mb-4">
+              <div className="mr-2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M12 2L2 7V17L12 22L22 17V7L12 2Z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill="rgba(255,255,255,0.1)"
+                  />
+                  <path
+                    d="M12 22V12"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M12 12L22 7"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M12 12L2 7"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold text-amber-50">न्यायसेतु</span>
+                <span className="text-xs text-amber-200 -mt-1">NyaySetu</span>
+              </div>
+            </div>
+            <p className="text-amber-200 mb-4">
               Connecting legal professionals with those seeking knowledge and guidance.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-300 hover:text-white">
+              <a href="#" className="text-amber-300 hover:text-white">
                 <span className="sr-only">Facebook</span>
                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path
@@ -22,13 +60,13 @@ const Footer = () => {
                   />
                 </svg>
               </a>
-              <a href="#" className="text-gray-300 hover:text-white">
+              <a href="#" className="text-amber-300 hover:text-white">
                 <span className="sr-only">Twitter</span>
                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
                 </svg>
               </a>
-              <a href="#" className="text-gray-300 hover:text-white">
+              <a href="#" className="text-amber-300 hover:text-white">
                 <span className="sr-only">LinkedIn</span>
                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path
@@ -41,80 +79,82 @@ const Footer = () => {
             </div>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-4 text-amber-200">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-gray-300 hover:text-white">
+                <Link to="/" className="text-amber-300 hover:text-white">
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-gray-300 hover:text-white">
+                <Link to="/blog" className="text-amber-300 hover:text-white">
                   Blogs
                 </Link>
               </li>
               <li>
-                <Link to="/qa" className="text-gray-300 hover:text-white">
+                <Link to="/qa" className="text-amber-300 hover:text-white">
                   Q&A
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-gray-300 hover:text-white">
+                <Link to="/about" className="text-amber-300 hover:text-white">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-300 hover:text-white">
+                <Link to="/contact" className="text-amber-300 hover:text-white">
                   Contact
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4">Legal</h3>
+            <h3 className="text-lg font-semibold mb-4 text-amber-200">Legal</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/terms" className="text-gray-300 hover:text-white">
+                <Link to="/terms" className="text-amber-300 hover:text-white">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link to="/privacy" className="text-gray-300 hover:text-white">
+                <Link to="/privacy" className="text-amber-300 hover:text-white">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link to="/disclaimer" className="text-gray-300 hover:text-white">
+                <Link to="/disclaimer" className="text-amber-300 hover:text-white">
                   Disclaimer
                 </Link>
               </li>
               <li>
-                <Link to="/faq" className="text-gray-300 hover:text-white">
+                <Link to="/faq" className="text-amber-300 hover:text-white">
                   FAQ
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
+            <h3 className="text-lg font-semibold mb-4 text-amber-200">Contact Us</h3>
             <ul className="space-y-2">
               <li className="flex items-start">
-                <MapPin className="h-5 w-5 text-gray-400 mr-2 mt-0.5" />
-                <span className="text-gray-300">123 Legal Street, New Delhi, India</span>
+                <MapPin className="h-5 w-5 text-amber-400 mr-2 mt-0.5" />
+                <span className="text-amber-300">123 Legal Street, New Delhi, India</span>
               </li>
               <li className="flex items-center">
-                <Phone className="h-5 w-5 text-gray-400 mr-2" />
-                <span className="text-gray-300">+91 98765 43210</span>
+                <Phone className="h-5 w-5 text-amber-400 mr-2" />
+                <span className="text-amber-300">+91 98765 43210</span>
               </li>
               <li className="flex items-center">
-                <Mail className="h-5 w-5 text-gray-400 mr-2" />
-                <span className="text-gray-300">info@nyaysetu.com</span>
+                <Mail className="h-5 w-5 text-amber-400 mr-2" />
+                <span className="text-amber-300">info@nyaysetu.com</span>
               </li>
             </ul>
           </div>
         </div>
-        <div className="mt-8 pt-8 border-t border-gray-700">
-          <p className="text-gray-300 text-center">&copy; {new Date().getFullYear()} NyaySetu. All rights reserved.</p>
+        <div className="mt-8 pt-8 border-t border-amber-800">
+          <p className="text-amber-300 text-center">
+            &copy; {new Date().getFullYear()} न्यायसेतु (NyaySetu). All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
