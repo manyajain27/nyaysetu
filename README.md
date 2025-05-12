@@ -13,6 +13,8 @@ Solution:
 Live: [nyaysetu.vercel.app](https://nyaysetu.vercel.app/)
 
 ![Screenshot 2025-05-12 130233](https://github.com/user-attachments/assets/9f456128-55da-4122-a960-a2a0e4ba33cf)
+Chatbot: ![image](https://github.com/user-attachments/assets/acc1f95d-2561-4164-807c-0bd02c0f1f0e)
+
 ![Screenshot 2025-05-12 130454](https://github.com/user-attachments/assets/17bc8ecf-1f8e-47db-a959-e7beeafa75cc)
 ![Screenshot 2025-05-12 130435](https://github.com/user-attachments/assets/bd1d4f40-9eb5-41f9-b9d4-091d788e24f4)
 ![Screenshot 2025-05-12 130532](https://github.com/user-attachments/assets/5da83dd4-9817-4e45-97c6-2c262958d42e)
