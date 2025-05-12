@@ -10,7 +10,7 @@ Solution:
 -implemented a generative chatbot that answers all your questions related to the law with memory.
 -clerk for authentication
 
-Live: nyaysetu.vercel.app
+Live: [nyaysetu.vercel.app](https://nyaysetu.vercel.app/)
 
 ![Screenshot 2025-05-12 130233](https://github.com/user-attachments/assets/9f456128-55da-4122-a960-a2a0e4ba33cf)
 ![Screenshot 2025-05-12 130454](https://github.com/user-attachments/assets/17bc8ecf-1f8e-47db-a959-e7beeafa75cc)
